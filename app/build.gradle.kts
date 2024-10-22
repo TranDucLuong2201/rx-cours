@@ -7,13 +7,6 @@ plugins {
   alias(libs.plugins.dagger.hilt.android)
 }
 
-kotlin {
-  jvmToolchain {
-    languageVersion = JavaLanguageVersion.of(19)
-    vendor = JvmVendorSpec.AZUL
-  }
-}
-
 android {
   namespace = "com.rxmobileteam.pet"
   compileSdk = 34
@@ -64,19 +57,8 @@ android {
   }
   compileOptions {
     isCoreLibraryDesugaringEnabled = true
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-  }
-
-  kotlinOptions {
-    jvmTarget = "1.8"
-    freeCompilerArgs = listOf(
-      "-Xopt-in=kotlin.RequiresOptIn",
-      "-Xopt-in=kotlin.ExperimentalStdlibApi",
-      "-Xopt-in=kotlin.time.ExperimentalTime",
-      "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-      "-Xopt-in=kotlinx.coroutines.FlowPreview",
-    )
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
   }
 
   buildFeatures {

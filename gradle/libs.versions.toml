@@ -32,6 +32,9 @@ glide = "4.16.0"
 lottie = "6.5.2"
 flowExt = "1.0.0"
 
+spotless = "6.25.0"
+ktlint = "1.0.0"
+
 [libraries]
 
 # AndroidX
@@ -107,6 +110,8 @@ kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref =
 
 dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+
+gradle-spotless = { id = "com.diffplug.gradle.spotless", version.ref = "spotless" }
 
 [bundles]
 
