@@ -5,5 +5,5 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class DetailArgs(
-  val id: String
+  val id: String,
 ) : Parcelable

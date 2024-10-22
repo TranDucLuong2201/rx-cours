@@ -9,22 +9,22 @@ import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 
 abstract class BaseFragment<VB : ViewBinding>(
-  private val inflate: (LayoutInflater, ViewGroup?, Boolean) -> VB
+  private val inflate: (LayoutInflater, ViewGroup?, Boolean) -> VB,
 ) : Fragment() {
   private var _binding: VB? = null
   protected val binding get() = _binding!!
-
 
   @CallSuper
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View = inflate(
-    inflater,
-    container,
-    false,
-  ).also { _binding = it }.root
+    savedInstanceState: Bundle?,
+  ): View =
+    inflate(
+      inflater,
+      container,
+      false,
+    ).also { _binding = it }.root
 
   @CallSuper
   override fun onDestroyView() {

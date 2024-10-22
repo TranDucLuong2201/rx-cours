@@ -16,32 +16,35 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
-internal class FavoriteCatRepositoryImpl @Inject constructor(
-  private val favoriteCatDao: FavoriteCatDao,
-  @AppDispatcher(DispatcherType.IO) private val ioDispatcher: CoroutineDispatcher,
-) : FavoriteCatRepository {
-  override suspend fun voteDown(cat: Cat) =
-    runSuspendCatching(ioDispatcher) { favoriteCatDao.delete(cat.toFavoriteCatEntity()) }
+internal class FavoriteCatRepositoryImpl
+  @Inject
+  constructor(
+    private val favoriteCatDao: FavoriteCatDao,
+    @AppDispatcher(DispatcherType.IO) private val ioDispatcher: CoroutineDispatcher,
+  ) : FavoriteCatRepository {
+    override suspend fun voteDown(cat: Cat) =
+      runSuspendCatching(ioDispatcher) { favoriteCatDao.delete(cat.toFavoriteCatEntity()) }
 
-  override suspend fun voteUp(cat: Cat) =
-    runSuspendCatching(ioDispatcher) {
-      favoriteCatDao.insert(cat.toFavoriteCatEntity())
-      Unit
-    }
+    override suspend fun voteUp(cat: Cat) =
+      runSuspendCatching(ioDispatcher) {
+        favoriteCatDao.insert(cat.toFavoriteCatEntity())
+        Unit
+      }
 
-  @OptIn(FlowExtPreview::class)
-  override fun observeFavoriteCats() =
-    favoriteCatDao
-      .observeAll()
-      .map { it.map(FavoriteCatEntity::toCatDomain) }
-      .flowOn(ioDispatcher)
-      .mapToResult()
-}
+    @OptIn(FlowExtPreview::class)
+    override fun observeFavoriteCats() =
+      favoriteCatDao
+        .observeAll()
+        .map { it.map(FavoriteCatEntity::toCatDomain) }
+        .flowOn(ioDispatcher)
+        .mapToResult()
+  }
 
-internal fun Cat.toFavoriteCatEntity(): FavoriteCatEntity = FavoriteCatEntity(
-  id = id,
-  url = url,
-  width = width,
-  height = height,
-  createdAt = Instant.now(),
-)
+internal fun Cat.toFavoriteCatEntity(): FavoriteCatEntity =
+  FavoriteCatEntity(
+    id = id,
+    url = url,
+    width = width,
+    height = height,
+    createdAt = Instant.now(),
+  )

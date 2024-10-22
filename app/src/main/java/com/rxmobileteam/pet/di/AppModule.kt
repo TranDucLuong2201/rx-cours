@@ -12,7 +12,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 interface AppModule {
   companion object {
-
     @Provides
     @Singleton
     fun provideMoshi(): Moshi =

@@ -30,7 +30,10 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
     )
   }
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+  override fun onViewCreated(
+    view: View,
+    savedInstanceState: Bundle?,
+  ) {
     super.onViewCreated(view, savedInstanceState)
 
     setupViews()
@@ -54,44 +57,46 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
     binding.buttonRetry.setOnClickListener { viewModel.retry() }
   }
 
-  private fun renderUiState(uiState: FavoriteUiState) = when (uiState) {
-    is FavoriteUiState.Loading -> {
-      binding.run {
-        progressBar.visible()
-        buttonRetry.gone()
-        textViewEmpty.gone()
+  private fun renderUiState(uiState: FavoriteUiState) =
+    when (uiState) {
+      is FavoriteUiState.Loading -> {
+        binding.run {
+          progressBar.visible()
+          buttonRetry.gone()
+          textViewEmpty.gone()
+        }
+        favoriteCatAdapter.submitList(emptyList())
       }
-      favoriteCatAdapter.submitList(emptyList())
-    }
 
-    is FavoriteUiState.Success -> {
-      binding.run {
-        progressBar.gone()
-        buttonRetry.gone()
-        textViewEmpty.visibleIf { uiState.cats.isEmpty() }
+      is FavoriteUiState.Success -> {
+        binding.run {
+          progressBar.gone()
+          buttonRetry.gone()
+          textViewEmpty.visibleIf { uiState.cats.isEmpty() }
+        }
+        favoriteCatAdapter.submitList(uiState.cats)
       }
-      favoriteCatAdapter.submitList(uiState.cats)
-    }
 
-    is FavoriteUiState.Error -> {
-      binding.run {
-        progressBar.gone()
-        buttonRetry.visible()
-        textViewEmpty.gone()
+      is FavoriteUiState.Error -> {
+        binding.run {
+          progressBar.gone()
+          buttonRetry.visible()
+          textViewEmpty.gone()
+        }
+        favoriteCatAdapter.submitList(emptyList())
       }
-      favoriteCatAdapter.submitList(emptyList())
-    }
-  }
-
-  private fun handleEvent(event: FavoriteSingleEvent) = when (event) {
-    is FavoriteSingleEvent.VoteDownSuccess -> {
-      Toast.makeText(requireContext(), "Removed successfully", Toast.LENGTH_SHORT).show()
     }
 
-    is FavoriteSingleEvent.VoteDownError -> {
-      Toast.makeText(requireContext(), R.string.title_error, Toast.LENGTH_SHORT).show()
+  private fun handleEvent(event: FavoriteSingleEvent) =
+    when (event) {
+      is FavoriteSingleEvent.VoteDownSuccess -> {
+        Toast.makeText(requireContext(), "Removed successfully", Toast.LENGTH_SHORT).show()
+      }
+
+      is FavoriteSingleEvent.VoteDownError -> {
+        Toast.makeText(requireContext(), R.string.title_error, Toast.LENGTH_SHORT).show()
+      }
     }
-  }
 
   private fun onClickItem(cat: Cat) {
     findNavController().safeNavigate {
@@ -99,8 +104,8 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
         directions = FavoriteFragmentDirections.actionFavoriteFragmentToDetailFragment(
           args = DetailArgs(
             id = cat.id,
-          )
-        )
+          ),
+        ),
       )
     }
   }

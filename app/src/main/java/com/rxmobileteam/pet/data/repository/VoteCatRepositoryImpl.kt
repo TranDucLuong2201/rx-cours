@@ -9,17 +9,21 @@ import com.rxmobileteam.pet.utils.runSuspendCatching
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 
-class VoteCatRepositoryImpl @Inject constructor(
-  private val petService: PetService,
-  @AppDispatcher(DispatcherType.IO) private val ioDispatcher: CoroutineDispatcher,
-) : VoteCatRepository {
-  override suspend fun getVoteCats(sortBy: String, limit: Int) =
-    runSuspendCatching(ioDispatcher) {
+class VoteCatRepositoryImpl
+  @Inject
+  constructor(
+    private val petService: PetService,
+    @AppDispatcher(DispatcherType.IO) private val ioDispatcher: CoroutineDispatcher,
+  ) : VoteCatRepository {
+    override suspend fun getVoteCats(
+      sortBy: String,
+      limit: Int,
+    ) = runSuspendCatching(ioDispatcher) {
       petService
         .getVoteList(
           order = sortBy,
-          limit = limit
+          limit = limit,
         )
         .map { it.toCatDomain() }
     }
-}
+  }

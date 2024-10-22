@@ -17,7 +17,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
 
-
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
 annotation class BaseUrlPetsQualifier
@@ -33,7 +32,6 @@ annotation class ApiRequest
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
   @Provides
   @BaseUrlPetsQualifier
   fun provideBaseUrlPets(): String = BuildConfig.API_DOMAIN
@@ -42,28 +40,29 @@ object NetworkModule {
   @ApiKeyPetsQualifier
   fun provideApiKeyClient(): String = BuildConfig.API_KEY
 
-
   @Provides
-  fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
-    level = if (BuildConfig.DEBUG) {
-      HttpLoggingInterceptor.Level.BODY
-    } else {
-      HttpLoggingInterceptor.Level.NONE
+  fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor =
+    HttpLoggingInterceptor().apply {
+      level = if (BuildConfig.DEBUG) {
+        HttpLoggingInterceptor.Level.BODY
+      } else {
+        HttpLoggingInterceptor.Level.NONE
+      }
     }
-  }
 
   @Provides
   @Singleton
   fun provideOkHttpClient(
     authorizationInterceptor: NetworkInterceptor,
     httpLoggingInterceptor: HttpLoggingInterceptor,
-  ): OkHttpClient = OkHttpClient.Builder()
-    .connectTimeout(30, TimeUnit.SECONDS)
-    .readTimeout(30, TimeUnit.SECONDS)
-    .writeTimeout(30, TimeUnit.SECONDS)
-    .addNetworkInterceptor(httpLoggingInterceptor)
-    .addInterceptor(authorizationInterceptor)
-    .build()
+  ): OkHttpClient =
+    OkHttpClient.Builder()
+      .connectTimeout(30, TimeUnit.SECONDS)
+      .readTimeout(30, TimeUnit.SECONDS)
+      .writeTimeout(30, TimeUnit.SECONDS)
+      .addNetworkInterceptor(httpLoggingInterceptor)
+      .addInterceptor(authorizationInterceptor)
+      .build()
 
   @Provides
   @Singleton
@@ -71,14 +70,16 @@ object NetworkModule {
   fun provideRetrofit(
     moshi: Moshi,
     okHttpClient: OkHttpClient,
-    @BaseUrlPetsQualifier baseUrl: String
-  ): Retrofit = Retrofit.Builder()
-    .baseUrl(baseUrl)
-    .client(okHttpClient)
-    .addConverterFactory(MoshiConverterFactory.create(moshi))
-    .build()
+    @BaseUrlPetsQualifier baseUrl: String,
+  ): Retrofit =
+    Retrofit.Builder()
+      .baseUrl(baseUrl)
+      .client(okHttpClient)
+      .addConverterFactory(MoshiConverterFactory.create(moshi))
+      .build()
 
   @Provides
-  fun providePetsService(@ApiRequest retrofit: Retrofit): PetService =
-    retrofit.create()
+  fun providePetsService(
+    @ApiRequest retrofit: Retrofit,
+  ): PetService = retrofit.create()
 }

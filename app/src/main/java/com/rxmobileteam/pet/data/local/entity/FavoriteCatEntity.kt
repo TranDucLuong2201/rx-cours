@@ -21,9 +21,10 @@ data class FavoriteCatEntity(
   val createdAt: Instant,
 )
 
-fun FavoriteCatEntity.toCatDomain(): Cat = Cat(
-  id = id,
-  url = url,
-  width = width,
-  height = height,
-)
+fun FavoriteCatEntity.toCatDomain(): Cat =
+  Cat(
+    id = id,
+    url = url,
+    width = width,
+    height = height,
+  )

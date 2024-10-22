@@ -38,20 +38,21 @@ abstract class PetsAppDatabase : RoomDatabase() {
     fun getInstance(
       context: Context,
       queryExecutor: Executor,
-    ): PetsAppDatabase = INSTANCE ?: synchronized(this) {
-      INSTANCE ?: Room.databaseBuilder(
-        context.applicationContext,
-        PetsAppDatabase::class.java,
-        DB_NAME
-      )
-        // Use a separate thread for Room transactions to avoid deadlocks. This means that tests that run Room
-        // transactions can't use testCoroutines.scope.runBlockingTest, and have to simply use runBlocking instead.
-        .setTransactionExecutor(Executors.newSingleThreadExecutor())
-        // Run queries on background I/O thread.
-        .setQueryExecutor(queryExecutor)
-        .build()
-        .also { INSTANCE = it }
-    }
+    ): PetsAppDatabase =
+      INSTANCE ?: synchronized(this) {
+        INSTANCE ?: Room.databaseBuilder(
+          context.applicationContext,
+          PetsAppDatabase::class.java,
+          DB_NAME,
+        )
+          // Use a separate thread for Room transactions to avoid deadlocks. This means that tests that run Room
+          // transactions can't use testCoroutines.scope.runBlockingTest, and have to simply use runBlocking instead.
+          .setTransactionExecutor(Executors.newSingleThreadExecutor())
+          // Run queries on background I/O thread.
+          .setQueryExecutor(queryExecutor)
+          .build()
+          .also { INSTANCE = it }
+      }
   }
 }
 

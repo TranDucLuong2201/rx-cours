@@ -19,16 +19,20 @@ inline fun View.invisible() {
   if (visibility != View.INVISIBLE) visibility = View.INVISIBLE
 }
 
-inline fun View.visibleIf(condition: Boolean, gone: Boolean = true) =
-  if (condition) {
-    visible()
-  } else {
-    if (gone) gone() else invisible()
-  }
-
+inline fun View.visibleIf(
+  condition: Boolean,
+  gone: Boolean = true,
+) = if (condition) {
+  visible()
+} else {
+  if (gone) gone() else invisible()
+}
 
 @OptIn(ExperimentalContracts::class)
-inline fun View.visibleIf(gone: Boolean = true, conditionLambda: () -> Boolean) {
+inline fun View.visibleIf(
+  gone: Boolean = true,
+  conditionLambda: () -> Boolean,
+) {
   contract { callsInPlace(conditionLambda, InvocationKind.EXACTLY_ONCE) }
   visibleIf(condition = conditionLambda(), gone = gone)
 }

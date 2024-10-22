@@ -7,15 +7,20 @@ import com.rxmobileteam.pet.databinding.ItemVoteImageBinding
 import com.rxmobileteam.pet.domain.model.Cat
 
 class VotePetsAdapter : ListAdapter<Cat, VoteCardViewHolder>(VoteDiffCallBack) {
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VoteCardViewHolder =
+  override fun onCreateViewHolder(
+    parent: ViewGroup,
+    viewType: Int,
+  ): VoteCardViewHolder =
     VoteCardViewHolder(
       binding = ItemVoteImageBinding.inflate(
         LayoutInflater.from(parent.context),
         parent,
-        false
+        false,
       ),
     )
 
-  override fun onBindViewHolder(holder: VoteCardViewHolder, position: Int) =
-    holder.bind(getItem(position))
+  override fun onBindViewHolder(
+    holder: VoteCardViewHolder,
+    position: Int,
+  ) = holder.bind(getItem(position))
 }

@@ -5,8 +5,10 @@ import com.rxmobileteam.pet.domain.repository.FavoriteCatRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
-class ObserveFavoriteCatsUseCase @Inject constructor(
-  private val favoriteCatRepository: FavoriteCatRepository,
-) {
-  operator fun invoke(): Flow<Result<List<Cat>>> = favoriteCatRepository.observeFavoriteCats()
-}
+class ObserveFavoriteCatsUseCase
+  @Inject
+  constructor(
+    private val favoriteCatRepository: FavoriteCatRepository,
+  ) {
+    operator fun invoke(): Flow<Result<List<Cat>>> = favoriteCatRepository.observeFavoriteCats()
+  }

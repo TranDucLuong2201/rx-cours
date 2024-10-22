@@ -8,7 +8,6 @@ import com.rxmobileteam.pet.presentation.vote.swipe.listener.OnEventDragListener
 import com.rxmobileteam.pet.presentation.vote.swipe.listener.OnSwipeDirectionListener
 
 class PetSwipeRecyclerView(context: Context, attrs: AttributeSet?) : RecyclerView(context, attrs) {
-
   private var onSwipeDirectionListener: OnSwipeDirectionListener? = null
   private val catSwipeLayoutManager: PetSwipeLayoutManager
   private var onItemClickListener: OnClickListener? = null
@@ -43,25 +42,33 @@ class PetSwipeRecyclerView(context: Context, attrs: AttributeSet?) : RecyclerVie
     catSwipeLayoutManager.performSwipe(this, direction)
   }
 
-  private fun getInternalDragListener() = object : OnEventDragListener {
-    override fun onDrag(v: View, x: Float, y: Float) {
-      catSwipeLayoutManager.run {
-        changeChildViewScale(this@PetSwipeRecyclerView, getChildViewHolder(v), x, y)
-        changeDragPercent(this@PetSwipeRecyclerView, x, y)
+  private fun getInternalDragListener() =
+    object : OnEventDragListener {
+      override fun onDrag(
+        v: View,
+        x: Float,
+        y: Float,
+      ) {
+        catSwipeLayoutManager.run {
+          changeChildViewScale(this@PetSwipeRecyclerView, getChildViewHolder(v), x, y)
+          changeDragPercent(this@PetSwipeRecyclerView, x, y)
+        }
+      }
+
+      override fun onDragEnded(
+        v: View,
+        x: Float,
+        y: Float,
+      ) {
+        catSwipeLayoutManager.onDragEnded(this@PetSwipeRecyclerView, getChildViewHolder(v), x, y)
+      }
+
+      override fun onClick(v: View) {
+        onItemClickListener?.onClick(v)
       }
     }
-
-    override fun onDragEnded(v: View, x: Float, y: Float) {
-      catSwipeLayoutManager.onDragEnded(this@PetSwipeRecyclerView, getChildViewHolder(v), x, y)
-    }
-
-    override fun onClick(v: View) {
-      onItemClickListener?.onClick(v)
-    }
-  }
 
   fun getCurrentPosition(): Int {
     return catSwipeLayoutManager.getCurrentPosition()
   }
-
 }

@@ -8,7 +8,6 @@ import com.rxmobileteam.pet.presentation.ext.loadImageFromUrlWithLoading
 class VoteCardViewHolder(
   private val binding: ItemVoteImageBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
-
   fun bind(vote: Cat) {
     binding.imgThumb.loadImageFromUrlWithLoading(vote.url)
   }

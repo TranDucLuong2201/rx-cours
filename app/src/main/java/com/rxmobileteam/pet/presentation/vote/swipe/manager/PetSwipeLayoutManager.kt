@@ -14,7 +14,6 @@ import kotlin.math.sqrt
 
 class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) :
   RecyclerView.LayoutManager() {
-
   private var onSwipeDirectionListener: OnSwipeDirectionListener? = null
   private var startXPosition: Float? = null
   private var startYPosition: Float? = null
@@ -31,11 +30,14 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
   override fun generateDefaultLayoutParams(): RecyclerView.LayoutParams {
     return RecyclerView.LayoutParams(
       ViewGroup.LayoutParams.MATCH_PARENT,
-      ViewGroup.LayoutParams.MATCH_PARENT
+      ViewGroup.LayoutParams.MATCH_PARENT,
     )
   }
 
-  override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
+  override fun onLayoutChildren(
+    recycler: RecyclerView.Recycler,
+    state: RecyclerView.State,
+  ) {
     detachAndScrapAttachedViews(recycler)
     if (itemCount < 1) return
 
@@ -52,8 +54,11 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
 
       setElevation(
         view,
-        if (isTopView) defaultElevation
-        else defaultElevation - 1f * drawPosition
+        if (isTopView) {
+          defaultElevation
+        } else {
+          defaultElevation - 1f * drawPosition
+        },
       )
 
       measureChildWithMargins(view, 0, 0)
@@ -65,7 +70,7 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
         params.leftMargin + paddingLeft,
         params.topMargin + paddingTop,
         getDecoratedMeasuredWidth(view) + params.leftMargin + paddingLeft,
-        getDecoratedMeasuredHeight(view) + params.topMargin + paddingTop
+        getDecoratedMeasuredHeight(view) + params.topMargin + paddingTop,
       )
 
       if (drawPosition > 0) {
@@ -91,7 +96,7 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
     recyclerView: RecyclerView,
     viewHolder: RecyclerView.ViewHolder,
     dX: Float,
-    dY: Float
+    dY: Float,
   ) {
     val swipeValue = sqrt(dX * dX + dY * dY.toDouble())
     val fraction = 1.0.coerceAtMost(swipeValue / getThreshold(viewHolder))
@@ -102,7 +107,7 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
       val level: Int = childCount - i - 1
       if (level > 0) {
         val scale = 0f.coerceAtLeast(
-          1f.coerceAtMost((1 - scaleGap * level + fraction * scaleGap).toFloat())
+          1f.coerceAtMost((1 - scaleGap * level + fraction * scaleGap).toFloat()),
         )
         child.scaleX = scale
         if (level < preloadCount - 1) {
@@ -138,7 +143,7 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
   fun changeDragPercent(
     recyclerView: RecyclerView,
     dX: Float,
-    dY: Float
+    dY: Float,
   ) {
     val swipeWidthPercent = 1f.coerceAtMost(dX / recyclerView.measuredWidth)
     val swipeHeightPercent = 1f.coerceAtMost(dY / recyclerView.measuredHeight)
@@ -146,21 +151,20 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
     if (isEnableDirection(judgeLeftOrRight(swipeWidthPercent))) {
       onSwipeDirectionListener?.onChangeHorizontalDrag(
         judgeLeftOrRight(swipeWidthPercent),
-        abs(swipeWidthPercent)
+        abs(swipeWidthPercent),
       )
     }
     if (isEnableDirection(judgeTopOrBottom(swipeHeightPercent))) {
       onSwipeDirectionListener?.onChangeHorizontalDrag(
         judgeTopOrBottom(swipeHeightPercent),
-        abs(swipeHeightPercent)
+        abs(swipeHeightPercent),
       )
     }
   }
 
-
   fun performSwipe(
     recyclerView: RecyclerView,
-    direction: Int
+    direction: Int,
   ) {
     val topView = getTopView(recyclerView)
     if (isEnableDirection(direction) && topView != null) {
@@ -172,7 +176,7 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
     recyclerView: RecyclerView,
     viewHolder: RecyclerView.ViewHolder,
     dX: Float,
-    dY: Float
+    dY: Float,
   ) {
     clearViewTouchListener(viewHolder.itemView)
 
@@ -181,13 +185,13 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
 
     getCandidateDirection(
       swipeWidthPercent,
-      swipeHeightPercent
+      swipeHeightPercent,
     ).firstOrNull { isEnableDirection(it) }
       ?.let {
         onSwiped(
           viewHolder.itemView,
           getSecondView(recyclerView),
-          it
+          it,
         )
       }
       ?: run {
@@ -201,11 +205,15 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
           },
           {
             postOnAnimation { setTopViewOnTouchListener(viewHolder.itemView) }
-          })
+          },
+        )
       }
   }
 
-  private fun initStartPosition(x: Float, y: Float) {
+  private fun initStartPosition(
+    x: Float,
+    y: Float,
+  ) {
     startXPosition = x
     startYPosition = y
   }
@@ -214,7 +222,10 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
     defaultElevation = defaultElevation.coerceAtLeast(elevation)
   }
 
-  private fun setElevation(view: View, elevation: Float) {
+  private fun setElevation(
+    view: View,
+    elevation: Float,
+  ) {
     ViewCompat.setElevation(view, elevation)
   }
 
@@ -241,7 +252,7 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
           dragEventListener.onDragEnded(
             v,
             rawX + event.rawX,
-            rawY + event.rawY
+            rawY + event.rawY,
           )
           if (lastMoveOrDown > 0L && SystemClock.uptimeMillis() - lastMoveOrDown <= pressedStateDuration) {
             dragEventListener.onClick(v)
@@ -253,7 +264,6 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
         MotionEvent.ACTION_MOVE -> {
           dragEventListener.onDrag(v, rawX + event.rawX, rawY + event.rawY)
           transitionAnimation(v, rawX + event.rawX, rawY + event.rawY) {
-
           }
           if (lastMoveOrDown == 0L) {
             lastMoveOrDown = SystemClock.uptimeMillis()
@@ -278,14 +288,25 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
   }
 
   private fun judgeTopOrBottom(percent: Float): Int =
-    if (percent > 0) SWIPE_BOTTOM
-    else SWIPE_TOP
+    if (percent > 0) {
+      SWIPE_BOTTOM
+    } else {
+      SWIPE_TOP
+    }
 
   private fun judgeLeftOrRight(percent: Float): Int =
-    if (percent > 0) SWIPE_RIGHT
-    else SWIPE_LEFT
+    if (percent > 0) {
+      SWIPE_RIGHT
+    } else {
+      SWIPE_LEFT
+    }
 
-  private fun swipedAnimation(x: Float, y: Float, swipeDirect: Int, swipedView: View) {
+  private fun swipedAnimation(
+    x: Float,
+    y: Float,
+    swipeDirect: Int,
+    swipedView: View,
+  ) {
     transitionAnimation(swipedView, x, y, autoDraggingAnimationDuration) {
       resetViewPosition(swipedView)
 
@@ -314,9 +335,8 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
   private fun onSwiped(
     swipedView: View,
     secondView: View?,
-    direction: Int
+    direction: Int,
   ) {
-
     if (secondView != null) {
       restoreScaleAnimation(secondView, autoDraggingAnimationDuration)
     }
@@ -329,7 +349,7 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
           swipedView.x * value,
           swipedView.y - swipedView.height,
           direction,
-          swipedView
+          swipedView,
         )
       }
 
@@ -338,7 +358,7 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
           swipedView.x * value,
           swipedView.y + swipedView.height,
           direction,
-          swipedView
+          swipedView,
         )
       }
 
@@ -347,7 +367,7 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
           swipedView.x - swipedView.width,
           swipedView.y * value,
           direction,
-          swipedView
+          swipedView,
         )
       }
 
@@ -356,7 +376,7 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
           swipedView.x + swipedView.width,
           swipedView.y * value,
           direction,
-          swipedView
+          swipedView,
         )
       }
     }
@@ -372,7 +392,7 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
     y: Float,
     duration: Long = 0,
     updateListener: ((View) -> Unit)? = null,
-    endAction: (() -> Unit)
+    endAction: (() -> Unit),
   ) {
     ViewCompat.animate(view)
       .x(x)
@@ -383,7 +403,10 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
       .start()
   }
 
-  private fun restoreScaleAnimation(view: View, duration: Long = 0) {
+  private fun restoreScaleAnimation(
+    view: View,
+    duration: Long = 0,
+  ) {
     view.animate()
       .scaleX(1f)
       .scaleY(1f)
@@ -412,7 +435,7 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
 
   private fun getCandidateDirection(
     widthPercent: Float,
-    heightPercent: Float
+    heightPercent: Float,
   ): List<Int> {
     val candidates = mutableListOf<Pair<Float, Int>>()
 
@@ -429,9 +452,7 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
       .map { it.second }
   }
 
-  private fun isEnableDirection(direction: Int) =
-    (swipeFlag and direction) == direction
-
+  private fun isEnableDirection(direction: Int) = (swipeFlag and direction) == direction
 
   companion object {
     const val SWIPE_LEFT = 1
@@ -439,5 +460,4 @@ class PetSwipeLayoutManager(private val dragEventListener: OnEventDragListener) 
     const val SWIPE_TOP = 1 shl 2
     const val SWIPE_BOTTOM = 1 shl 3
   }
-
 }

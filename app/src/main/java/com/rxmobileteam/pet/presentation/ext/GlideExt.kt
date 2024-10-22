@@ -6,7 +6,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.Target
 import com.rxmobileteam.pet.R
 
-fun ImageView.loadImageFromUrlWithLoading(url: String?, resize: Int? = null) {
+fun ImageView.loadImageFromUrlWithLoading(
+  url: String?,
+  resize: Int? = null,
+) {
   val circularProgressDrawable = CircularProgressDrawable(context)
   circularProgressDrawable.strokeWidth = 5f
   circularProgressDrawable.centerRadius = 30f

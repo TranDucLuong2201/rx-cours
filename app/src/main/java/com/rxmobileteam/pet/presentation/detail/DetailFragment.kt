@@ -15,7 +15,10 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding
   private val args by lazy(LazyThreadSafetyMode.NONE) { navArgs<DetailFragmentArgs>().value.args }
   private val viewModel by viewModels<DetailViewModel>()
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+  override fun onViewCreated(
+    view: View,
+    savedInstanceState: Bundle?,
+  ) {
     super.onViewCreated(view, savedInstanceState)
 
     // Demo using args

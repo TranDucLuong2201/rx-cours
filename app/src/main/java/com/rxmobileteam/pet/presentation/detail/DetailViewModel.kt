@@ -6,12 +6,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-internal class DetailViewModel @Inject constructor(
-  savedStateHandle: SavedStateHandle,
-) : ViewModel() {
-  internal val args = DetailFragmentArgs.fromSavedStateHandle(savedStateHandle).args
+internal class DetailViewModel
+  @Inject
+  constructor(
+    savedStateHandle: SavedStateHandle,
+  ) : ViewModel() {
+    internal val args = DetailFragmentArgs.fromSavedStateHandle(savedStateHandle).args
 
-  init {
-    // TODO: Use args.id to load detail
+    init {
+      // TODO: Use args.id to load detail
+    }
   }
-}

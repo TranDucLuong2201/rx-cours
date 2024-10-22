@@ -30,8 +30,8 @@ android {
                   if (!exists()) {
                     check(mkdirs()) { "Cannot create $this" }
                   }
-                }
-              )
+                },
+              ),
             )
           }
         }
@@ -51,7 +51,7 @@ android {
       isShrinkResources = true
       proguardFiles(
         getDefaultProguardFile("proguard-android-optimize.txt"),
-        "proguard-rules.pro"
+        "proguard-rules.pro",
       )
     }
   }
@@ -130,9 +130,8 @@ dependencies {
 class RoomSchemaArgProvider(
   @get:InputDirectory
   @get:PathSensitive(PathSensitivity.RELATIVE)
-  val schemaDir: File
+  val schemaDir: File,
 ) : CommandLineArgumentProvider {
-
   override fun asArguments(): Iterable<String> {
     // Note: If you're using KSP, change the line below to return
     // listOf("room.schemaLocation=${schemaDir.path}").

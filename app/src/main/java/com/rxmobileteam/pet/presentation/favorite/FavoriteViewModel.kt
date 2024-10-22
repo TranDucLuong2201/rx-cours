@@ -23,74 +23,78 @@ import timber.log.Timber
 
 internal sealed interface FavoriteUiState {
   data object Loading : FavoriteUiState
+
   data class Success(val cats: List<Cat>) : FavoriteUiState
+
   data class Error(val error: Throwable) : FavoriteUiState
 }
 
 internal sealed interface FavoriteSingleEvent {
   data class VoteDownSuccess(
-    val cat: Cat
+    val cat: Cat,
   ) : FavoriteSingleEvent
 
   data class VoteDownError(
     val cat: Cat,
-    val throwable: Throwable
+    val throwable: Throwable,
   ) : FavoriteSingleEvent
 }
 
 @HiltViewModel
-internal class FavoriteViewModel @Inject constructor(
-  observeFavoriteCatsUseCase: ObserveFavoriteCatsUseCase,
-  private val voteDownCatUseCase: VoteDownCatUseCase,
-) : ViewModel() {
-  private val _singleEventChannel = Channel<FavoriteSingleEvent>(Channel.UNLIMITED)
-    .apply { addCloseable(::close) }
+internal class FavoriteViewModel
+  @Inject
+  constructor(
+    observeFavoriteCatsUseCase: ObserveFavoriteCatsUseCase,
+    private val voteDownCatUseCase: VoteDownCatUseCase,
+  ) : ViewModel() {
+    private val _singleEventChannel = Channel<FavoriteSingleEvent>(Channel.UNLIMITED)
+      .apply { addCloseable(::close) }
 
-  /**
-   * This flow is used to trigger the loading of the favorite cats.
-   * A true value means that is a retry.
-   * A false value means that is the first time loading.
-   */
-  private val _loadFlow = MutableSharedFlow<Boolean>(
-    extraBufferCapacity = 1,
-    onBufferOverflow = DROP_OLDEST
-  )
-
-  internal val singleEventFlow: Flow<FavoriteSingleEvent> = _singleEventChannel.receiveAsFlow()
-
-  internal val uiStateFlow: StateFlow<FavoriteUiState> = _loadFlow
-    .onStart { emit(false) }
-    .flatMapLatest { isRetry ->
-      observeFavoriteCatsUseCase()
-        .map { result ->
-          result
-            .onFailure { Timber.e(it, "Failed to #observeFavoriteCatsUseCase") }
-            .fold(
-              onSuccess = FavoriteUiState::Success,
-              onFailure = FavoriteUiState::Error
-            )
-        }
-        .onStart { if (isRetry) emit(FavoriteUiState.Loading) }
-    }
-    .stateIn(
-      scope = viewModelScope,
-      started = WHILE_UI_SUBSCRIBED,
-      initialValue = FavoriteUiState.Loading
+    /**
+     * This flow is used to trigger the loading of the favorite cats.
+     * A true value means that is a retry.
+     * A false value means that is the first time loading.
+     */
+    private val _loadFlow = MutableSharedFlow<Boolean>(
+      extraBufferCapacity = 1,
+      onBufferOverflow = DROP_OLDEST,
     )
 
-  internal fun voteDownCat(cat: Cat) {
-    viewModelScope.launch {
-      voteDownCatUseCase(cat)
-        .onFailure { Timber.e(it, "Failed to #voteDownCatUseCase($cat)") }
-        .fold(
-          onSuccess = { FavoriteSingleEvent.VoteDownSuccess(cat) },
-          onFailure = { FavoriteSingleEvent.VoteDownError(cat, it) },
-        )
-        .also(_singleEventChannel::trySend)
+    internal val singleEventFlow: Flow<FavoriteSingleEvent> = _singleEventChannel.receiveAsFlow()
+
+    internal val uiStateFlow: StateFlow<FavoriteUiState> = _loadFlow
+      .onStart { emit(false) }
+      .flatMapLatest { isRetry ->
+        observeFavoriteCatsUseCase()
+          .map { result ->
+            result
+              .onFailure { Timber.e(it, "Failed to #observeFavoriteCatsUseCase") }
+              .fold(
+                onSuccess = FavoriteUiState::Success,
+                onFailure = FavoriteUiState::Error,
+              )
+          }
+          .onStart { if (isRetry) emit(FavoriteUiState.Loading) }
+      }
+      .stateIn(
+        scope = viewModelScope,
+        started = WHILE_UI_SUBSCRIBED,
+        initialValue = FavoriteUiState.Loading,
+      )
+
+    internal fun voteDownCat(cat: Cat) {
+      viewModelScope.launch {
+        voteDownCatUseCase(cat)
+          .onFailure { Timber.e(it, "Failed to #voteDownCatUseCase($cat)") }
+          .fold(
+            onSuccess = { FavoriteSingleEvent.VoteDownSuccess(cat) },
+            onFailure = { FavoriteSingleEvent.VoteDownError(cat, it) },
+          )
+          .also(_singleEventChannel::trySend)
+      }
+    }
+
+    internal fun retry() {
+      viewModelScope.launch { _loadFlow.emit(true) }
     }
   }
-
-  internal fun retry() {
-    viewModelScope.launch { _loadFlow.emit(true) }
-  }
-}

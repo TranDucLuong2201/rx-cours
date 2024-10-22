@@ -22,7 +22,6 @@ import kotlin.LazyThreadSafetyMode.NONE
 
 @AndroidEntryPoint
 class VoteHomeFragment : BaseFragment<FragmentHomeVoteBinding>(FragmentHomeVoteBinding::inflate) {
-
   private val voteViewModel by viewModels<VoteViewModel>()
   private val votePetsAdapter by lazy(NONE) {
     VotePetsAdapter()
@@ -31,38 +30,42 @@ class VoteHomeFragment : BaseFragment<FragmentHomeVoteBinding>(FragmentHomeVoteB
   @Inject
   lateinit var loadingDialogManager: LoadingDialogManager
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+  override fun onViewCreated(
+    view: View,
+    savedInstanceState: Bundle?,
+  ) {
     super.onViewCreated(view, savedInstanceState)
     setupView()
     observeData()
     setupViewEvent()
   }
 
-  private fun setupViewEvent() = binding.apply {
-    btnClose.setOnClickListener {
-      val position = binding.recyclerViewVote.getCurrentPosition()
-      recyclerViewVote.resetPosition()
-      voteViewModel.voteDown(votePetsAdapter.currentList[position])
-    }
+  private fun setupViewEvent() =
+    binding.apply {
+      btnClose.setOnClickListener {
+        val position = binding.recyclerViewVote.getCurrentPosition()
+        recyclerViewVote.resetPosition()
+        voteViewModel.voteDown(votePetsAdapter.currentList[position])
+      }
 
-    btnNext.setOnClickListener {
-      recyclerViewVote.nextView()
-    }
+      btnNext.setOnClickListener {
+        recyclerViewVote.nextView()
+      }
 
-    btnFavorite.setOnClickListener {
-      val position = binding.recyclerViewVote.getCurrentPosition()
-      voteViewModel.voteUp(votePetsAdapter.currentList[position])
-      recyclerViewVote.nextView()
-    }
+      btnFavorite.setOnClickListener {
+        val position = binding.recyclerViewVote.getCurrentPosition()
+        voteViewModel.voteUp(votePetsAdapter.currentList[position])
+        recyclerViewVote.nextView()
+      }
 
-    recyclerViewVote.setOnItemClickListener {
-      recyclerViewVote.getChildAdapterPosition(it).let { position ->
-        if (position != RecyclerView.NO_POSITION) {
-          onClickItem(votePetsAdapter.currentList[position])
+      recyclerViewVote.setOnItemClickListener {
+        recyclerViewVote.getChildAdapterPosition(it).let { position ->
+          if (position != RecyclerView.NO_POSITION) {
+            onClickItem(votePetsAdapter.currentList[position])
+          }
         }
       }
     }
-  }
 
   private fun observeData() {
     launchAndRepeatStarted(
@@ -71,10 +74,11 @@ class VoteHomeFragment : BaseFragment<FragmentHomeVoteBinding>(FragmentHomeVoteB
     )
   }
 
-  private fun setupView() = binding.recyclerViewVote.apply {
-    adapter = votePetsAdapter
-    setHasFixedSize(true)
-  }
+  private fun setupView() =
+    binding.recyclerViewVote.apply {
+      adapter = votePetsAdapter
+      setHasFixedSize(true)
+    }
 
   private fun handleSingleEvent(voteSingleEvent: VoteSingleEvent) {
     when (voteSingleEvent) {
@@ -88,21 +92,22 @@ class VoteHomeFragment : BaseFragment<FragmentHomeVoteBinding>(FragmentHomeVoteB
     }
   }
 
-  private fun handleVoteState(voteUiState: VoteUiState) = when (voteUiState) {
-    is VoteUiState.Loading -> {
-      loadingDialogManager.showLoading(show = true)
-    }
+  private fun handleVoteState(voteUiState: VoteUiState) =
+    when (voteUiState) {
+      is VoteUiState.Loading -> {
+        loadingDialogManager.showLoading(show = true)
+      }
 
-    is VoteUiState.Success -> {
-      submitVoteSuccess(voteUiState = voteUiState)
-      loadingDialogManager.showLoading(show = false)
-    }
+      is VoteUiState.Success -> {
+        submitVoteSuccess(voteUiState = voteUiState)
+        loadingDialogManager.showLoading(show = false)
+      }
 
-    is VoteUiState.Error -> {
-      loadingDialogManager.showLoading(show = false)
-      Toast.makeText(requireContext(), getString(R.string.title_error), Toast.LENGTH_SHORT).show()
+      is VoteUiState.Error -> {
+        loadingDialogManager.showLoading(show = false)
+        Toast.makeText(requireContext(), getString(R.string.title_error), Toast.LENGTH_SHORT).show()
+      }
     }
-  }
 
   private fun submitVoteSuccess(voteUiState: VoteUiState.Success) {
     binding.btnClose.visibleIf(voteUiState.data.size != 1)
@@ -116,8 +121,8 @@ class VoteHomeFragment : BaseFragment<FragmentHomeVoteBinding>(FragmentHomeVoteB
         directions = VoteHomeFragmentDirections.actionVoteHomeFragmentToDetailFragment(
           args = DetailArgs(
             id = cat.id,
-          )
-        )
+          ),
+        ),
       )
     }
   }

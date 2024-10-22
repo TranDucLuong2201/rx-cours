@@ -15,7 +15,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal interface DataModule {
-
   @Binds
   fun bindVoteCatRepository(repository: VoteCatRepositoryImpl): VoteCatRepository
 

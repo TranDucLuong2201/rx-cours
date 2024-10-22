@@ -23,13 +23,13 @@ interface DatabaseModule {
     fun providePetsAppDatabase(
       @ApplicationContext appContext: Context,
       @AppDispatcher(DispatcherType.IO) ioDispatcher: CoroutineDispatcher,
-    ): PetsAppDatabase = PetsAppDatabase.getInstance(
-      context = appContext,
-      queryExecutor = ioDispatcher.asExecutor(),
-    )
+    ): PetsAppDatabase =
+      PetsAppDatabase.getInstance(
+        context = appContext,
+        queryExecutor = ioDispatcher.asExecutor(),
+      )
 
     @Provides
-    fun provideFavoriteCatDao(petsAppDatabase: PetsAppDatabase): FavoriteCatDao =
-      petsAppDatabase.favoriteCatDao()
+    fun provideFavoriteCatDao(petsAppDatabase: PetsAppDatabase): FavoriteCatDao = petsAppDatabase.favoriteCatDao()
   }
 }

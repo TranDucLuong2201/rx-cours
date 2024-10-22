@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
     setupNavigation()
 
     launchAndRepeatStarted(
-      { networkMonitor.isOnline.collect(::handleOnlineStatus) }
+      { networkMonitor.isOnline.collect(::handleOnlineStatus) },
     )
   }
 

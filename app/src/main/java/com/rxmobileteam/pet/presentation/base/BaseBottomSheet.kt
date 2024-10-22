@@ -15,19 +15,25 @@ abstract class BaseBottomSheet<B : ViewBinding> : BottomSheetDialogFragment() {
   final override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
-    savedInstanceState: Bundle?
+    savedInstanceState: Bundle?,
   ): View {
     val binding = onInflateView(inflater, container)
     viewBinding = binding
     return binding.root
   }
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+  override fun onViewCreated(
+    view: View,
+    savedInstanceState: Bundle?,
+  ) {
     super.onViewCreated(view, savedInstanceState)
     setupUi()
   }
 
-  protected abstract fun onInflateView(inflater: LayoutInflater, container: ViewGroup?): B
+  protected abstract fun onInflateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+  ): B
 
   protected abstract fun setupUi()
 

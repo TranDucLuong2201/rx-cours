@@ -4,8 +4,10 @@ import com.rxmobileteam.pet.domain.model.Cat
 import com.rxmobileteam.pet.domain.repository.FavoriteCatRepository
 import javax.inject.Inject
 
-class VoteDownCatUseCase @Inject constructor(
-  private val favoriteCatRepository: FavoriteCatRepository,
-) {
-  suspend operator fun invoke(cat: Cat): Result<Unit> = favoriteCatRepository.voteDown(cat)
-}
+class VoteDownCatUseCase
+  @Inject
+  constructor(
+    private val favoriteCatRepository: FavoriteCatRepository,
+  ) {
+    suspend operator fun invoke(cat: Cat): Result<Unit> = favoriteCatRepository.voteDown(cat)
+  }
