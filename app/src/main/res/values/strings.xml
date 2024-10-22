@@ -1,0 +1,9 @@
+<resources>
+    <string name="title_vote">Vote</string>
+    <string name="title_breed">Breed</string>
+    <string name="title_favorite">Favorite</string>
+    <string name="title_close">Close</string>
+    <string name="title_next">Next</string>
+    <string name="title_error">Something wrong</string>
+    <string name="vote_error">Vote Error</string>
+</resources>

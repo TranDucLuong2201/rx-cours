@@ -1,0 +1,31 @@
+name: Build CI
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore: [ '**.md', '**.MD' ]
+
+  pull_request:
+    branches: [ main ]
+    paths-ignore: [ '**.md', '**.MD' ]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '19'
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Build debug APK
+        run: ./gradlew assembleDebug --warning-mode all --stacktrace

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/voteHomeFragment"
+    android:id="@+id/vote_graph">
+
+    <fragment
+        android:id="@+id/voteHomeFragment"
+        tools:layout="@layout/fragment_home_vote"
+        android:name="com.rxmobileteam.pet.presentation.vote.VoteHomeFragment"
+        android:label="Vote">
+        <action
+            android:id="@+id/action_voteHomeFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.rxmobileteam.pet.presentation.detail.DetailFragment"
+        android:label="Detail"
+        tools:layout="@layout/fragment_detail">
+        <argument
+            android:name="args"
+            app:argType="com.rxmobileteam.pet.presentation.detail.DetailArgs" />
+    </fragment>
+
+</navigation>
