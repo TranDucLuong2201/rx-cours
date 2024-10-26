@@ -31,7 +31,13 @@ for developers.
 DO NOT SHARE!!!
 
 ```
-BSD 3-Clause License
+Copyright © Rx-Mobile-Team - All Rights Reserved
+Unauthorized copying of this file, via any medium is strictly prohibited
+Proprietary and confidential
+Written by Petrus Nguyễn Thái Học <hoc081098@gmail.com>, 26 Oct, 2024
 
-Copyright (c) 2024, Rx Mobile Team
+Bản quyền © Rx-Mobile-Team - Mọi quyền được bảo lưu
+Nghiêm cấm sao chép trái phép tập tin này, thông qua bất kỳ phương tiện nào
+Độc quyền và bí mật
+Viết bởi Petrus Nguyễn Thái Học <hoc081098@gmail.com>, 26/10/2024
 ```
