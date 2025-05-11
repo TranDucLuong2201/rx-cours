@@ -2,7 +2,7 @@ plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.androidx.navigation.safeargs.kotlin)
-  alias(libs.plugins.kotlin.kapt)
+  alias(libs.plugins.ksp)
   alias(libs.plugins.kotlin.parcelize)
   alias(libs.plugins.dagger.hilt.android)
 }
@@ -94,7 +94,7 @@ android {
 }
 
 dependencies {
-  coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.2")
+  coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.appcompat)
@@ -109,7 +109,7 @@ dependencies {
 
   implementation(libs.androidx.room.ktx)
   implementation(libs.androidx.room.runtime)
-  kapt(libs.androidx.room.compiler)
+  ksp(libs.androidx.room.compiler)
 
   testImplementation(libs.junit)
   testImplementation(libs.androidx.fragment.testing)
@@ -117,7 +117,7 @@ dependencies {
   androidTestImplementation(libs.androidx.test.espresso.core)
 
   implementation(libs.dagger.hilt.android)
-  kapt(libs.dagger.hilt.compiler)
+  ksp(libs.dagger.hilt.compiler)
 
   implementation(libs.bundles.retrofit.okhttp3)
   implementation(libs.bundles.moshi)
@@ -138,3 +138,4 @@ class RoomSchemaArgProvider(
     return listOf("-Aroom.schemaLocation=${schemaDir.path}")
   }
 }
+

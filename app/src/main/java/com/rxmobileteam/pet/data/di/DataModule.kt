@@ -19,7 +19,7 @@ internal interface DataModule {
   fun bindVoteCatRepository(repository: VoteCatRepositoryImpl): VoteCatRepository
 
   @Binds
-  fun favoriteCatRepositoryImpl(repository: FavoriteCatRepositoryImpl): FavoriteCatRepository
+  fun favoriteCatRepositryImpl(repository: FavoriteCatRepositoryImpl): FavoriteCatRepository
 
   @Binds
   @Singleton
